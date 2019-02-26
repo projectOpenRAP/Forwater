@@ -132,6 +132,9 @@ let initialize = () => {
         return createFolderIfNotExists(forwaterData.media_root);
     }).then(value => {
         console.log("Created " + forwaterData.media_root);
+        return createFolderIfNotExists(`${forwaterData.media_root}/.stfolder`);
+    }).then(value => {
+        console.log("Created " + `${forwaterData.media_root}/.stfolder`);
         return createFolderIfNotExists(forwaterData.telemetry);
     }).then(value => {
         console.log("Created " + forwaterData.telemetry);
