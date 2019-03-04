@@ -11,6 +11,7 @@
             "config_json_dir": "/home/admin/forwater/config_json/",
             "config_json_name": "config.json",
             "content_root": "/home/admin/forwater/ecar_files/",
+            "db" : "fw.db",
             "json_dir": "/home/admin/forwater/json_dir/",
             "media_root": "/home/admin/forwater/",
             "profile_name": "forwater",

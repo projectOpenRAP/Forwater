@@ -1,0 +1,90 @@
+{
+    "response": {
+        "id": "org.ekstep.genie.content.home",
+        "sections": [{
+            "display" : {
+                "name": {
+                    "en":"Latest Resource",
+                    "hi":""
+                }
+            },
+            "searchQuery": {
+                "request":{
+                    "query":"",
+                    "filters":{
+                        "language":[],
+                        "contentType":["Resource"],
+                        "objectType":["Content"],
+                        "status":["Live"]
+                    },
+                    "limit":10,
+                    "sort_by":{"lastUpdatedOn":"desc"}
+                }
+            }
+        },    
+        {
+        "display": {
+                "name":{
+                    "en":"Most Downloaded Resource",
+                    "hi":""
+                }
+            },
+            "searchQuery" : {
+                "request":{
+                    "query":"",
+                    "filters":{
+                        "language":[],
+                        "contentType":["Resource"],
+                        "objectType":["Content"],
+                        "status":["Live"]
+                    },
+                    "limit":10,
+                    "sort_by":{"me_totalDownloads":"desc"}
+                }
+            }
+        },
+        {
+            "display" : {
+                "name": {
+                    "en":"Latest Collection",
+                    "hi":""
+                }
+            },
+            "searchQuery": {
+                "request":{
+                    "query":"",
+                    "filters":{
+                        "language":[],
+                        "contentType":["Collection"],
+                        "objectType":["Content"],
+                        "status":["Live"]
+                    },
+                    "limit":10,
+                    "sort_by":{"lastUpdatedOn":"desc"}
+                }
+            }
+        },
+        {
+            "display" : {
+                "name": {
+                    "en":"Most Downloaded Collection",
+                    "hi":""
+                }
+            },
+            "searchQuery" : {
+                "request": {
+                    "query":"",
+                    "filters": {
+                        "language":[],
+                        "contentType":["Collection"],
+                        "objectType":["Content"],
+                        "status":["Live"]
+                    },
+                    "limit":10,
+                    "sort_by":{"me_totalDownloads":"desc"}
+                }
+            }
+        }    
+        ]
+    }
+}
