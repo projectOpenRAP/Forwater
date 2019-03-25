@@ -9,9 +9,11 @@ let fs = require('fs');
 let dns = require('dns');
 let cron = require('node-cron');
 // let registerURL = 'https://api.ekstep.in/api-manager/v1/consumer/cdn_device/credential/register';
-let telemetryURL = 'https://forwater.gov.in/api/data/v1/telemetry';
+let telemetryURL = ' https://knowledge.forwater.in/api/data/v1/telemetry';
 let appJwt = '';
 let zlib = require('zlib');
+
+const config = require('./config');
 
 let JWT_ALGORITHM = 'HS256';
 let logFile = '/tmp/telemetry_upload.log';
@@ -132,26 +134,28 @@ let checkConnectivity = () => {
     return defer.promise;
 }
 
+let getJWTForAuth = () => {
+    return q.when({
+        token: config.AUTH_JWT
+    });
+}
+
 let requestTokenGeneration = () => {
     let defer = q.defer();
-    console.log("Bongiorno")
-    if (tmJwt.length < 1) {
-        generateOriginalJWTs().then(value => {
-            console.log("We have obtained " + value.token);
-            tmJwt = value.token;
-            currentTokenStatus = 1;
-            return uploadTelemetryDirectory();
-        }).then(value => {
-            return defer.resolve();
-        }).catch(e => {
-            console.log("Error: " + e.err);
-            return defer.reject();
-        });
-    } else {
-        console.log("Reusing key")
-        uploadTelemetryDirectory();
+    console.log("Fetching token.");
+    
+    getJWTForAuth().then(value => {
+        console.log("We have obtained " + value.token);
+        tmJwt = value.token;
+        currentTokenStatus = 1;
+        return uploadTelemetryDirectory();
+    }).then(value => {
         defer.resolve();
-    }
+    }).catch(e => {
+        console.log("Error: " + e.err);
+        defer.reject();
+    });
+
     return defer.promise;
 }
 

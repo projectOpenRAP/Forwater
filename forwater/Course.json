@@ -1,0 +1,44 @@
+{
+    "response": {
+        "id": "org.ekstep.genie.content.home",
+        "sections": [ {
+            "display" : {
+                "name": {
+                    "en":"Latest Courses",
+                    "hi":"????????"
+                }
+            },
+            "searchQuery" : {
+                "request": {
+                    "filters": {
+                        "contentType":["Course"],
+                        "objectType":["Content"],
+                        "status":["Live"]
+                    },
+                    "sort_by":{"lastPublishedOn":"desc"},
+                    "limit":10
+                }
+            }
+        },
+        {
+            "display" : {
+                "name":{
+                    "en":"Popular Courses",
+                    "hi":"????????"
+                }
+            },
+            "searchQuery" : {
+                "request": {
+                    "filters": {
+                        "contentType":["Course"],
+                        "objectType":["Content"],
+                        "status":["Live"]
+                    },
+                    "sort_by":{"name":"asc"},
+                    "limit":10
+                }
+            }
+        }    
+        ]
+    }
+}
