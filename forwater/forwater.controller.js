@@ -417,8 +417,10 @@ let doSectionwiseSearch = (sectionObject) => {
 		   			        "match_phrase" : "" + sectionObject[key][i]
 				        });
 				    }	
-				    queryObject.conjuncts.push({disjuncts});
-
+                    
+                    if (disjuncts.length > 0) {
+                        queryObject.conjuncts.push({ disjuncts });
+                    }
 			    }
 			    else {
 		   	            field = { 

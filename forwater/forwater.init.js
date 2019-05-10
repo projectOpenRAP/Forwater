@@ -14,16 +14,15 @@ let {
     exec
 } = require('child_process');
 let {
-    initializeSbDB
-} = require('./forwater.db_restart.js');
-let {
-    addDocument
-} = require('../../../searchsdk/index.js');
-let {
     startUploadngTelemetry
 } = require('./forwater.telemetry_upload.js');
-
-
+let {
+    init,
+    createAndInitIndex,
+    deleteIndex,
+    getAllIndices
+} = require('../../../searchsdk/index.js');
+let reqConfig = require('./profile.json');
 
 let initializeForwaterData = (path) => {
     let defer = q.defer();
@@ -76,41 +75,28 @@ let processEcarFiles = (filePath) => {
     Adds the JSON files to BleveSearch Database
 */
 
-let jsonDocsToDb = (dir) => {
-    let defer = q.defer();
+let jsonDirToDb = () => {
     /*
         Updated behavior: Carpet bomb the index and rebuild from scratch
     */
-    initializeSbDB().then(value => {
-        console.log("Index successfully recreated");
-        let promises = [];
-        fs.readdir(dir, (err, files) => {
-            if (err) {
-                return defer.reject(err);
+   return init()
+        .then(res => {
+            return getAllIndices();
+        })
+        .then(res => {
+            let availableIndices = JSON.parse(res.body).indexes;
+
+            if (availableIndices.indexOf('fw.db') === -1) {
+                return { message : 'Creating forwater index now.' };
             } else {
-                for (let i = 0; i < files.length; i++) {
-                    if (files[i].lastIndexOf('.json') + '.json'.length === files[i].length) {
-                        promises.push(addDocument({
-                            indexName: "fw.db",
-                            documentPath: dir + files[i]
-                        }))
-                    }
-                }
-                q.allSettled(promises).then(values => {
-                    values.forEach(value => {
-                        if (typeof value.value.err !== 'undefined') {
-                            console.log("Error encountered!")
-                            return defer.reject(value.value.err);
-                        }
-                    });
-                    return defer.resolve(values[0].value.success);
-                });
+                return deleteIndex({ indexName : 'fw.db' });
             }
+        })
+        .then(res => {
+            res.message && console.log(res.message);
+            let jsonDir = reqConfig.available_profiles.forwater.json_dir
+            return createAndInitIndex({ indexName : 'fw.db', jsonDir : jsonDir});
         });
-    }).catch(e => {
-        defer.reject(e);
-    });
-    return defer.promise;
 }
 
 let initialize = () => {
@@ -145,11 +131,11 @@ let initialize = () => {
         console.log("Created " + forwaterData.unzip_content);
         return processEcarFiles(forwaterData.media_root);
     }).then(value => {
-        return jsonDocsToDb(forwaterData.json_dir);
-    }, reason => {
+       jsonDirToDb();
+    }).catch(reason => {
         console.log(reason);
         console.log("There seem to be corrupt ecar files in the directory.");
-        return jsonDocsToDb(forwaterData.json_dir);
+        jsonDirToDb();
     }).then(value => {
         console.log("Initialized API Server");
     }).catch(e => {
